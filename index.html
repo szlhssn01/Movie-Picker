@@ -51,15 +51,16 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
       padding: 14px 0;
     }
     .title {
       font-family: 'Bebas Neue', sans-serif;
-      letter-spacing: 0.14em;
-      font-size: 30px;
+      letter-spacing: 0.28em;
+      font-size: 32px;
       color: #F5EDE0;
       margin: 0;
+      text-align: center;
+      margin-right: -0.28em; /* Offset for right letter-spacing alignment */
     }
 
     /* Ticket Zone */
@@ -75,6 +76,7 @@
     .empty-ticket p { margin: 0; }
     .empty-ticket .sub { margin-top: 4px; color: #9AAAC0; font-size: 14px; }
 
+    /* Movie Ticket Styling with Cutouts */
     .ticket {
       background: #F5EDE0;
       border-radius: 12px;
@@ -82,14 +84,31 @@
       align-items: stretch;
       overflow: hidden;
       box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+      position: relative;
     }
-    .ticket-perf {
+    .ticket-edge {
       width: 14px;
-      background: repeating-linear-gradient(180deg, transparent 0 6px, #12172B 6px 8px);
-      background-color: #F5EDE0;
       flex-shrink: 0;
+      background-color: #F5EDE0;
+      /* CSS Mask to generate semi-circular punch hole cutouts along the edges */
+      -webkit-mask-image: radial-gradient(circle 5px at 0px 50%, transparent 99%, black 100%);
+      mask-image: radial-gradient(circle 5px at 0px 50%, transparent 99%, black 100%);
+      -webkit-mask-size: 100% 16px;
+      mask-size: 100% 16px;
+      -webkit-mask-repeat: repeat-y;
+      mask-repeat: repeat-y;
     }
-    .ticket-body { padding: 20px 18px; flex: 1; }
+    .ticket-edge.left {
+      -webkit-mask-position: 0 0;
+      mask-position: 0 0;
+    }
+    .ticket-edge.right {
+      -webkit-mask-image: radial-gradient(circle 5px at 14px 50%, transparent 99%, black 100%);
+      mask-image: radial-gradient(circle 5px at 14px 50%, transparent 99%, black 100%);
+      -webkit-mask-position: 0 0;
+      mask-position: 0 0;
+    }
+    .ticket-body { padding: 20px 14px; flex: 1; }
     .ticket-eyebrow {
       font-family: 'IBM Plex Mono', monospace;
       font-size: 11px;
@@ -226,13 +245,16 @@
     .row.highlight { border-color: #E8B94E; }
     .row-title { color: #F5EDE0; font-size: 14px; word-break: break-word; padding-right: 8px; }
     .row-title.seen { color: #7C8AA0; text-decoration: line-through; }
-    .row-actions { display: flex; gap: 6px; flex-shrink: 0; }
+    
+    /* Increased spacing between list action buttons */
+    .row-actions { display: flex; gap: 14px; flex-shrink: 0; }
+    
     .icon-btn {
       background: transparent;
       border: none;
       color: #9AAAC0;
       cursor: pointer;
-      padding: 4px;
+      padding: 6px;
       display: flex;
     }
 
@@ -259,8 +281,7 @@
     <div class="marquee">
       <div class="bulb-row" id="top-bulbs"></div>
       <div class="marquee-inner">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E8B94E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 3v18"/><path d="M3 7.5h4"/><path d="M3 12h18"/><path d="M3 16.5h4"/><path d="M17 3v18"/><path d="M17 7.5h4"/><path d="M17 16.5h4"/></svg>
-        <h1 class="title">NOW PICKING</h1>
+        <h1 class="title">NOW SHOWING</h1>
       </div>
       <div class="bulb-row" id="bottom-bulbs" style="margin-top: 10px;"></div>
     </div>
@@ -279,10 +300,10 @@
     <!-- Tabs -->
     <div class="tab-row">
       <button class="tab mp-btn active" id="tab-queue" onclick="switchTab('queue')">
-        Up next <span id="queue-count">0</span>
+        To Watch <span id="queue-count">0</span>
       </button>
       <button class="tab mp-btn" id="tab-seen" onclick="switchTab('seen')">
-        Already seen <span id="seen-count">0</span>
+        Watched <span id="seen-count">0</span>
       </button>
     </div>
 
@@ -305,7 +326,7 @@
     }
 
     function init() {
-      // Build bulbs
+      // Build marquee light bulbs
       const topBulbs = document.getElementById("top-bulbs");
       const bottomBulbs = document.getElementById("bottom-bulbs");
       for (let i = 0; i < 18; i++) {
@@ -313,7 +334,7 @@
         bottomBulbs.appendChild(document.createElement("span")).className = "bulb";
       }
 
-      // Load storage
+      // Load persistent storage
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
         if (raw) {
@@ -442,7 +463,7 @@
       if (current) {
         ticketZone.innerHTML = `
           <div class="ticket">
-            <div class="ticket-perf"></div>
+            <div class="ticket-edge left"></div>
             <div class="ticket-body">
               <span class="ticket-eyebrow">TONIGHT'S SHOWING</span>
               <h2 class="ticket-title ${state.spinning ? 'spinning' : ''}">${escapeHtml(current.title)}</h2>
@@ -452,12 +473,12 @@
                   Mark watched
                 </button>
                 <button class="secondary-btn mp-btn" onclick="pickRandom(state.movies.filter(m => !m.watched))" ${state.spinning || unwatched.length < 2 ? 'disabled' : ''}>
-                  <svg width="16" height="16" class="${state.spinning ? 'mp-reel-spin' : ''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 3v18"/><path d="M3 7.5h4"/><path d="M3 12h18"/><path d="M3 16.5h4"/><path d="M17 3v18"/><path d="M17 7.5h4"/><path d="M17 16.5h4"/></svg>
-                  Reroll
+                  <svg width="16" height="16" class="${state.spinning ? 'mp-reel-spin' : ''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><path d="M16 8h.01"/><path d="M8 8h.01"/><path d="M12 12h.01"/><path d="M16 16h.01"/><path d="M8 16h.01"/></svg>
+                  Random
                 </button>
               </div>
             </div>
-            <div class="ticket-perf"></div>
+            <div class="ticket-edge right"></div>
           </div>
         `;
       } else if (unwatched.length === 0 && state.movies.length > 0) {
