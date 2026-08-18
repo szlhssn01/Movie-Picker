@@ -85,21 +85,49 @@
       align-items: stretch;
       box-shadow: 0 10px 30px rgba(0,0,0,0.35);
       position: relative;
-      
-      /* Create punch hole effect with CSS mask */
-      -webkit-mask-image: 
-        radial-gradient(circle 6px at 8px 0, transparent 6px, black 0),
-        radial-gradient(circle 6px at calc(100% - 8px) 0, transparent 6px, black 0);
-      -webkit-mask-size: 100% 30px;
-      -webkit-mask-repeat: repeat-y;
-      -webkit-mask-position: 0 14px;
-      
-      mask-image: 
-        radial-gradient(circle 6px at 8px 0, transparent 6px, black 0),
-        radial-gradient(circle 6px at calc(100% - 8px) 0, transparent 6px, black 0);
-      mask-size: 100% 30px;
-      mask-repeat: repeat-y;
-      mask-position: 0 14px;
+      overflow: visible;
+    }
+
+    /* Decorative punch holes on left edge */
+    .ticket::before {
+      content: '';
+      position: absolute;
+      left: -6px;
+      top: 14px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #12172B;
+      box-shadow: 
+        0 30px 0 #12172B,
+        0 60px 0 #12172B,
+        0 90px 0 #12172B,
+        0 120px 0 #12172B,
+        0 150px 0 #12172B,
+        0 180px 0 #12172B,
+        0 210px 0 #12172B;
+      pointer-events: none;
+    }
+
+    /* Decorative punch holes on right edge */
+    .ticket::after {
+      content: '';
+      position: absolute;
+      right: -6px;
+      top: 14px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #12172B;
+      box-shadow: 
+        0 30px 0 #12172B,
+        0 60px 0 #12172B,
+        0 90px 0 #12172B,
+        0 120px 0 #12172B,
+        0 150px 0 #12172B,
+        0 180px 0 #12172B,
+        0 210px 0 #12172B;
+      pointer-events: none;
     }
 
     .ticket-body { 
