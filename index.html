@@ -233,8 +233,36 @@
       display: flex;
     }
 
+    /* Minimalist Footer / Data Actions */
+    .data-footer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      margin-top: 20px;
+      padding-top: 14px;
+      border-top: 1px solid #1F2847;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+    }
+    .footer-btn {
+      background: transparent;
+      border: none;
+      color: #7C8AA0;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: inherit;
+      padding: 4px 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: color 0.15s ease;
+    }
+    .footer-btn:hover { color: #E8B94E; }
+    .footer-divider { color: #2C3559; }
+
     /* Focus & Animation */
-    .mp-btn:focus-visible, .mp-input:focus-visible, .tab:focus-visible {
+    .mp-btn:focus-visible, .mp-input:focus-visible, .tab:focus-visible, .footer-btn:focus-visible {
       outline: 2px solid #E8B94E;
       outline-offset: 2px;
     }
@@ -284,6 +312,20 @@
 
     <!-- List -->
     <div class="mp-list" id="movie-list"></div>
+
+    <!-- Footer Controls -->
+    <div class="data-footer">
+      <button class="footer-btn" onclick="exportData()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export JSON
+      </button>
+      <span class="footer-divider">|</span>
+      <button class="footer-btn" onclick="document.getElementById('import-file-input').click()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Import JSON
+      </button>
+      <input type="file" id="import-file-input" accept=".json" style="display: none;" onchange="importData(event)" />
+    </div>
   </div>
 
   <script>
@@ -332,6 +374,45 @@
       } catch (e) {
         console.error("Failed to save state", e);
       }
+    }
+
+    function exportData() {
+      if (state.movies.length === 0) {
+        alert("Your movie list is empty. Nothing to export.");
+        return;
+      }
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `movie_list_backup_${new Date().toISOString().slice(0,10)}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    }
+
+    function importData(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          if (Array.isArray(parsed.movies)) {
+            state.movies = parsed.movies;
+            state.pickId = parsed.pickId || null;
+            save();
+            render();
+            alert("Movie list imported successfully!");
+          } else {
+            alert("Invalid JSON format. File must contain a 'movies' list.");
+          }
+        } catch (err) {
+          alert("Error parsing JSON file.");
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = "";
     }
 
     function addMovie(e) {
