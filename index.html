@@ -77,21 +77,14 @@
     .empty-ticket p { margin: 0; }
     .empty-ticket .sub { margin-top: 4px; color: #9AAAC0; font-size: 14px; }
 
-    /* Ticket with scalloped edges like a real movie ticket */
+    /* Ticket - plain white card */
     .ticket {
       background: #F5EDE0;
+      border-radius: 12px;
       display: flex;
       align-items: stretch;
       box-shadow: 0 10px 30px rgba(0,0,0,0.35);
       position: relative;
-      
-      /* Scalloped edges using clip-path */
-      clip-path: polygon(
-        /* Top left corner */
-        20px 0%, 20px 8px, 10px 8px, 10px 16px, 20px 16px, 20px 24px, 10px 24px, 10px 32px, 20px 32px, 20px 40px, 10px 40px, 10px 48px, 20px 48px, 20px 56px, 10px 56px, 10px 64px, 20px 64px, 20px 72px, 10px 72px, 10px 80px, 20px 80px, 20px 88px, 10px 88px, 10px 96px, 20px 96px, 20px 100%,
-        /* Top right */
-        100% 100%, 100% 96px, 90% 96px, 90% 88px, 100% 88px, 100% 80px, 90% 80px, 90% 72px, 100% 72px, 100% 64px, 90% 64px, 90% 56px, 100% 56px, 100% 48px, 90% 48px, 90% 40px, 100% 40px, 100% 32px, 90% 32px, 90% 24px, 100% 24px, 100% 16px, 90% 16px, 90% 8px, 100% 8px, 100% 0%
-      );
     }
 
     .ticket-body { 
