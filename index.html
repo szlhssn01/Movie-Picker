@@ -3,21 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Movie Picker</title>
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap"
-    rel="stylesheet"
-  >
-
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       min-height: 100vh;
@@ -28,15 +19,9 @@
       font-family: 'Space Grotesk', sans-serif;
     }
 
-    .wrap {
-      width: 100%;
-      max-width: 420px;
-    }
+    .wrap { width: 100%; max-width: 420px; }
 
-    /* =========================================================
-       MARQUEE
-       ========================================================= */
-
+    /* Marquee */
     .marquee {
       background: #1B2140;
       border: 1px solid #2C3559;
@@ -44,39 +29,22 @@
       padding: 16px 14px;
       margin-bottom: 18px;
     }
-
-    .bulb-row {
-      display: flex;
-      justify-content: space-between;
-    }
-
+    .bulb-row { display: flex; justify-content: space-between; }
     .bulb {
       width: 6px;
       height: 6px;
       border-radius: 50%;
       background: #E8B94E;
-      box-shadow: 0 0 6px 1px rgba(232, 185, 78, 0.7);
+      box-shadow: 0 0 6px 1px rgba(232,185,78,0.7);
       display: inline-block;
       animation: mpBulbGlow 1.6s ease-in-out infinite;
     }
-
-    .bulb:nth-child(odd) {
-      animation-delay: 0.4s;
-    }
-
-    .bulb:nth-child(3n) {
-      animation-delay: 0.8s;
-    }
+    .bulb:nth-child(odd) { animation-delay: 0.4s; }
+    .bulb:nth-child(3n) { animation-delay: 0.8s; }
 
     @keyframes mpBulbGlow {
-      0%,
-      100% {
-        opacity: 0.35;
-      }
-
-      50% {
-        opacity: 1;
-      }
+      0%, 100% { opacity: 0.35; }
+      50% { opacity: 1; }
     }
 
     .marquee-inner {
@@ -85,7 +53,6 @@
       justify-content: center;
       padding: 18px 0;
     }
-
     .title {
       font-family: 'Bebas Neue', sans-serif;
       letter-spacing: 0.35em;
@@ -97,15 +64,8 @@
       margin-right: -0.35em;
     }
 
-
-    /* =========================================================
-       TICKET ZONE
-       ========================================================= */
-
-    .ticket-zone {
-      margin-bottom: 18px;
-    }
-
+    /* Ticket Zone */
+    .ticket-zone { margin-bottom: 18px; }
     .empty-ticket {
       background: #1B2140;
       border: 1px dashed #3E5C76;
@@ -114,109 +74,37 @@
       text-align: center;
       color: #D8DEEA;
     }
+    .empty-ticket p { margin: 0; }
+    .empty-ticket .sub { margin-top: 4px; color: #9AAAC0; font-size: 14px; }
 
-    .empty-ticket p {
-      margin: 0;
-    }
-
-    .empty-ticket .sub {
-      margin-top: 4px;
-      color: #9AAAC0;
-      font-size: 14px;
-    }
-
-
-    /* =========================================================
-       MOVIE TICKET
-       ========================================================= */
-
+    /* Ticket with Movie Ticket Punch Holes */
     .ticket {
       background: #F5EDE0;
       border-radius: 12px;
       display: flex;
       align-items: stretch;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
       position: relative;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      
+      /* Create punch hole effect with CSS mask */
+      -webkit-mask-image: 
+        radial-gradient(circle 6px at 8px 0, transparent 6px, black 0),
+        radial-gradient(circle 6px at calc(100% - 8px) 0, transparent 6px, black 0);
+      -webkit-mask-size: 100% 30px;
+      -webkit-mask-repeat: repeat-y;
+      -webkit-mask-position: 0 14px;
+      
+      mask-image: 
+        radial-gradient(circle 6px at 8px 0, transparent 6px, black 0),
+        radial-gradient(circle 6px at calc(100% - 8px) 0, transparent 6px, black 0);
+      mask-size: 100% 30px;
+      mask-repeat: repeat-y;
+      mask-position: 0 14px;
     }
 
-    /*
-      LEFT PERFORATION
-
-      The radial gradient is positioned on the very edge of
-      the ticket. Because the circle is centered exactly at
-      x = 0, only half of the circle appears inside the ticket,
-      creating a semicircular punch-hole.
-    */
-
-    .ticket::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-
-      width: 10px;
-
-      background-image:
-        radial-gradient(
-          circle 7px at 0 24px,
-          #12172B 0 6px,
-          transparent 6.5px
-        );
-
-      background-size: 10px 48px;
-      background-repeat: repeat-y;
-      background-position: left top;
-
-      pointer-events: none;
-      z-index: 2;
-    }
-
-
-    /*
-      RIGHT PERFORATION
-
-      Same technique, mirrored to the right side.
-    */
-
-    .ticket::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      right: 0;
-
-      width: 10px;
-
-      background-image:
-        radial-gradient(
-          circle 7px at 100% 24px,
-          #12172B 0 6px,
-          transparent 6.5px
-        );
-
-      background-size: 10px 48px;
-      background-repeat: repeat-y;
-      background-position: right top;
-
-      pointer-events: none;
-      z-index: 2;
-    }
-
-
-    /*
-      Ticket content.
-
-      Extra horizontal padding keeps the text and buttons away
-      from the perforated edges.
-    */
-
-    .ticket-body {
-      width: 100%;
-      padding: 20px 24px;
-      position: relative;
-      z-index: 3;
+    .ticket-body { 
+      padding: 20px 20px; 
+      flex: 1; 
     }
 
     .ticket-eyebrow {
@@ -236,493 +124,192 @@
       letter-spacing: 0.01em;
       word-break: break-word;
     }
+    .ticket-title.spinning { opacity: 0.5; }
 
-    .ticket-title.spinning {
-      opacity: 0.5;
-    }
-
-
-    /* =========================================================
-       TICKET BUTTONS
-       ========================================================= */
-
-    .ticket-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
+    .ticket-actions { display: flex; gap: 10px; flex-wrap: wrap; }
     .primary-btn {
       display: flex;
       align-items: center;
       gap: 6px;
-
       background: #1B2140;
       color: #F5EDE0;
-
       border: none;
       border-radius: 8px;
-
       padding: 9px 14px;
-
       font-size: 14px;
       font-weight: 600;
       cursor: pointer;
       font-family: inherit;
-
-      transition:
-        transform 0.15s ease,
-        opacity 0.15s ease;
     }
-
     .secondary-btn {
       display: flex;
       align-items: center;
       gap: 6px;
-
       background: transparent;
       color: #1B2140;
-
       border: 1px solid #1B2140;
       border-radius: 8px;
-
       padding: 9px 14px;
-
       font-size: 14px;
       font-weight: 600;
       cursor: pointer;
       font-family: inherit;
-
-      transition:
-        transform 0.15s ease,
-        opacity 0.15s ease;
     }
-
-    .primary-btn:hover,
-    .secondary-btn:hover,
-    .pick-fresh-btn:hover,
-    .add-btn:hover {
-      transform: translateY(-1px);
-    }
-
-    .primary-btn:active,
-    .secondary-btn:active,
-    .pick-fresh-btn:active,
-    .add-btn:active {
-      transform: translateY(0);
-    }
-
-    .primary-btn:disabled,
-    .secondary-btn:disabled {
-      cursor: default;
-      opacity: 0.55;
-      transform: none;
-    }
-
     .pick-fresh-btn {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-
       width: 100%;
       margin-top: 12px;
-
       background: #E8B94E;
       color: #1B2140;
-
       border: none;
       border-radius: 10px;
-
       padding: 12px 14px;
-
       font-size: 15px;
       font-weight: 700;
       cursor: pointer;
-
       font-family: 'Space Grotesk', sans-serif;
-
-      transition: transform 0.15s ease;
     }
 
-
-    /* =========================================================
-       ADD MOVIE FORM
-       ========================================================= */
-
-    .add-form {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 18px;
-    }
-
+    /* Form */
+    .add-form { display: flex; gap: 8px; margin-bottom: 18px; }
     .mp-input {
       flex: 1;
-
       background: #1B2140;
       border: 1px solid #2C3559;
       border-radius: 8px;
-
       padding: 11px 12px;
-
       color: #F5EDE0;
       font-size: 14px;
       font-family: inherit;
-
-      outline: none;
     }
-
-    .mp-input::placeholder {
-      color: #7C849A;
-    }
-
-    .mp-input:focus {
-      border-color: #E8B94E;
-    }
-
     .add-btn {
       background: #E8B94E;
       border: none;
       border-radius: 8px;
-
       width: 42px;
-
       display: flex;
       align-items: center;
       justify-content: center;
-
       color: #1B2140;
       cursor: pointer;
-
-      transition: transform 0.15s ease;
     }
 
-
-    /* =========================================================
-       TABS
-       ========================================================= */
-
-    .tab-row {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 10px;
-    }
-
+    /* Tabs */
+    .tab-row { display: flex; gap: 8px; margin-bottom: 10px; }
     .tab {
       flex: 1;
-
       background: transparent;
       border: 1px solid #2C3559;
       border-radius: 8px;
-
       padding: 9px 10px;
-
       color: #9AAAC0;
-
       font-size: 13px;
       font-weight: 600;
-
       cursor: pointer;
       font-family: 'IBM Plex Mono', monospace;
-
       display: flex;
       justify-content: center;
       gap: 6px;
-
-      transition:
-        border-color 0.15s ease,
-        color 0.15s ease,
-        background 0.15s ease;
     }
-
     .tab.active {
       background: #1B2140;
       color: #E8B94E;
       border-color: #E8B94E;
     }
 
-
-    /* =========================================================
-       MOVIE LIST
-       ========================================================= */
-
+    /* List */
     .mp-list {
       display: flex;
       flex-direction: column;
       gap: 8px;
-
       max-height: 320px;
       overflow-y: auto;
-
       padding-right: 2px;
     }
-
-    .mp-list::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    .mp-list::-webkit-scrollbar-thumb {
-      background: #3E5C76;
-      border-radius: 4px;
-    }
+    .mp-list::-webkit-scrollbar { width: 6px; }
+    .mp-list::-webkit-scrollbar-thumb { background: #3E5C76; border-radius: 4px; }
 
     .row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-
       background: #1B2140;
       border: 1px solid #2C3559;
       border-radius: 8px;
-
       padding: 10px 12px;
-
-      transition:
-        border-color 0.15s ease,
-        background 0.15s ease;
     }
-
-    .row.highlight {
-      border-color: #E8B94E;
-    }
-
-    .row-title {
-      color: #F5EDE0;
-      font-size: 14px;
-      word-break: break-word;
-      padding-right: 8px;
-    }
-
-    .row-title.seen {
-      color: #7C8AA0;
-      text-decoration: line-through;
-    }
-
-    .row-actions {
-      display: flex;
-      gap: 14px;
-      flex-shrink: 0;
-    }
-
+    .row.highlight { border-color: #E8B94E; }
+    .row-title { color: #F5EDE0; font-size: 14px; word-break: break-word; padding-right: 8px; }
+    .row-title.seen { color: #7C8AA0; text-decoration: line-through; }
+    
+    .row-actions { display: flex; gap: 14px; flex-shrink: 0; }
+    
     .icon-btn {
       background: transparent;
       border: none;
-
       color: #9AAAC0;
-
       cursor: pointer;
       padding: 6px;
-
       display: flex;
-      align-items: center;
-      justify-content: center;
-
-      transition:
-        color 0.15s ease,
-        transform 0.15s ease;
     }
 
-    .icon-btn:hover {
-      transform: translateY(-1px);
-    }
-
-
-    /* =========================================================
-       FOCUS
-       ========================================================= */
-
-    .mp-btn:focus-visible,
-    .mp-input:focus-visible,
-    .tab:focus-visible {
+    /* Focus & Animation */
+    .mp-btn:focus-visible, .mp-input:focus-visible, .tab:focus-visible {
       outline: 2px solid #E8B94E;
       outline-offset: 2px;
     }
-
-
-    /* =========================================================
-       ANIMATIONS
-       ========================================================= */
-
-    .mp-reel-spin {
-      animation: mpSpin 0.7s linear infinite;
-    }
-
+    .mp-reel-spin { animation: mpSpin 0.7s linear infinite; }
     @keyframes mpSpin {
-      from {
-        transform: rotate(0deg);
-      }
-
-      to {
-        transform: rotate(360deg);
-      }
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
     }
-
-
-    /* =========================================================
-       EMPTY STATE
-       ========================================================= */
-
-    .empty-note {
-      color: #7C8AA0;
-      font-size: 14px;
-      text-align: center;
-      padding: 14px 0;
-    }
-
-
-    /* =========================================================
-       REDUCED MOTION
-       ========================================================= */
-
     @media (prefers-reduced-motion: reduce) {
-      .bulb,
-      .mp-reel-spin {
-        animation: none !important;
-      }
-
-      .primary-btn,
-      .secondary-btn,
-      .pick-fresh-btn,
-      .add-btn,
-      .icon-btn {
-        transition: none;
-      }
+      .bulb, .mp-reel-spin { animation: none !important; }
     }
-
-
-    /* =========================================================
-       SMALL SCREENS
-       ========================================================= */
-
-    @media (max-width: 360px) {
-      .ticket-body {
-        padding: 18px 20px;
-      }
-
-      .ticket-title {
-        font-size: 28px;
-      }
-
-      .ticket-actions {
-        gap: 8px;
-      }
-
-      .primary-btn,
-      .secondary-btn {
-        padding: 9px 11px;
-      }
-    }
+    .empty-note { color: #7C8AA0; font-size: 14px; text-align: center; padding: 14px 0; }
   </style>
 </head>
-
 <body>
 
   <div class="wrap">
-
-    <!-- =====================================================
-         MARQUEE
-         ===================================================== -->
-
+    <!-- Marquee -->
     <div class="marquee">
-
       <div class="bulb-row" id="top-bulbs"></div>
-
       <div class="marquee-inner">
         <h1 class="title">NOW SHOWING</h1>
       </div>
-
       <div class="bulb-row" id="bottom-bulbs"></div>
-
     </div>
 
-
-    <!-- =====================================================
-         TICKET
-         ===================================================== -->
-
+    <!-- Ticket Zone -->
     <div class="ticket-zone" id="ticket-zone"></div>
 
-
-    <!-- =====================================================
-         ADD MOVIE
-         ===================================================== -->
-
+    <!-- Form -->
     <form class="add-form" id="add-form">
-
-      <input
-        class="mp-input"
-        id="movie-input"
-        type="text"
-        placeholder="Add a movie to the queue…"
-        aria-label="Movie title"
-        required
-      />
-
-      <button
-        class="add-btn mp-btn"
-        type="submit"
-        aria-label="Add movie"
-      >
-        <svg
-          width="18"
-          height="18"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <path d="M5 12h14"/>
-          <path d="M12 5v14"/>
-        </svg>
+      <input class="mp-input" id="movie-input" type="text" placeholder="Add a movie to the queue…" aria-label="Movie title" required />
+      <button class="add-btn mp-btn" type="submit" aria-label="Add movie">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
       </button>
-
     </form>
 
-
-    <!-- =====================================================
-         TABS
-         ===================================================== -->
-
+    <!-- Tabs -->
     <div class="tab-row">
-
-      <button
-        class="tab mp-btn active"
-        id="tab-queue"
-        onclick="switchTab('queue')"
-      >
-        To Watch
-        <span id="queue-count">0</span>
+      <button class="tab mp-btn active" id="tab-queue" onclick="switchTab('queue')">
+        To Watch <span id="queue-count">0</span>
       </button>
-
-      <button
-        class="tab mp-btn"
-        id="tab-seen"
-        onclick="switchTab('seen')"
-      >
-        Watched
-        <span id="seen-count">0</span>
+      <button class="tab mp-btn" id="tab-seen" onclick="switchTab('seen')">
+        Watched <span id="seen-count">0</span>
       </button>
-
     </div>
 
-
-    <!-- =====================================================
-         MOVIE LIST
-         ===================================================== -->
-
+    <!-- List -->
     <div class="mp-list" id="movie-list"></div>
-
   </div>
 
-
   <script>
-
-    /* =========================================================
-       STATE
-       ========================================================= */
-
     const STORAGE_KEY = "movie-picker:list";
 
     let state = {
@@ -732,877 +319,225 @@
       tab: "queue"
     };
 
-
-    /* =========================================================
-       UTILITY
-       ========================================================= */
-
     function uid() {
-      return (
-        Math.random().toString(36).slice(2, 10) +
-        Date.now().toString(36)
-      );
+      return Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
     }
-
-
-    function escapeHtml(str) {
-      return str.replace(/[&<>"']/g, function (m) {
-        return {
-          '&': '&amp;',
-          '<': '&lt;',
-          '>': '&gt;',
-          '"': '&quot;',
-          "'": '&#039;'
-        }[m];
-      });
-    }
-
-
-    /* =========================================================
-       INITIALIZE
-       ========================================================= */
 
     function init() {
-
-      const topBulbs =
-        document.getElementById("top-bulbs");
-
-      const bottomBulbs =
-        document.getElementById("bottom-bulbs");
-
-
-      /* Create marquee bulbs */
-
+      const topBulbs = document.getElementById("top-bulbs");
+      const bottomBulbs = document.getElementById("bottom-bulbs");
       for (let i = 0; i < 18; i++) {
-
-        const topBulb =
-          document.createElement("span");
-
-        topBulb.className = "bulb";
-
-        topBulbs.appendChild(topBulb);
-
-
-        const bottomBulb =
-          document.createElement("span");
-
-        bottomBulb.className = "bulb";
-
-        bottomBulbs.appendChild(bottomBulb);
+        topBulbs.appendChild(document.createElement("span")).className = "bulb";
+        bottomBulbs.appendChild(document.createElement("span")).className = "bulb";
       }
-
-
-      /* Load saved data */
 
       try {
-
-        const raw =
-          localStorage.getItem(STORAGE_KEY);
-
+        const raw = localStorage.getItem(STORAGE_KEY);
         if (raw) {
-
-          const parsed =
-            JSON.parse(raw);
-
-          state.movies =
-            parsed.movies || [];
-
-          state.pickId =
-            parsed.pickId || null;
+          const parsed = JSON.parse(raw);
+          state.movies = parsed.movies || [];
+          state.pickId = parsed.pickId || null;
         }
-
       } catch (e) {
-
-        console.error(
-          "Failed to load local storage",
-          e
-        );
-
+        console.error("Failed to load local storage", e);
       }
 
-
-      /* Form */
-
-      document
-        .getElementById("add-form")
-        .addEventListener(
-          "submit",
-          addMovie
-        );
-
-
+      document.getElementById("add-form").addEventListener("submit", addMovie);
       render();
     }
-
-
-    /* =========================================================
-       SAVE
-       ========================================================= */
 
     function save() {
-
       try {
-
-        localStorage.setItem(
-          STORAGE_KEY,
-          JSON.stringify({
-            movies: state.movies,
-            pickId: state.pickId
-          })
-        );
-
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          movies: state.movies,
+          pickId: state.pickId
+        }));
       } catch (e) {
-
-        console.error(
-          "Failed to save state",
-          e
-        );
-
+        console.error("Failed to save state", e);
       }
     }
 
-
-    /* =========================================================
-       ADD MOVIE
-       ========================================================= */
-
     function addMovie(e) {
-
       e.preventDefault();
-
-      const input =
-        document.getElementById(
-          "movie-input"
-        );
-
-      const title =
-        input.value.trim();
-
+      const input = document.getElementById("movie-input");
+      const title = input.value.trim();
       if (!title) return;
 
-
-      const newMovie = {
-        id: uid(),
-        title,
-        watched: false
-      };
-
-
+      const newMovie = { id: uid(), title, watched: false };
       state.movies.push(newMovie);
-
       input.value = "";
 
+      const unwatched = state.movies.filter(m => !m.watched);
+      const current = state.movies.find(m => m.id === state.pickId && !m.watched);
 
-      const unwatched =
-        state.movies.filter(
-          m => !m.watched
-        );
-
-
-      const current =
-        state.movies.find(
-          m =>
-            m.id === state.pickId &&
-            !m.watched
-        );
-
-
-      /*
-        If this is the first movie, automatically
-        make it tonight's showing.
-      */
-
-      if (
-        !current &&
-        unwatched.length === 1
-      ) {
-        state.pickId =
-          newMovie.id;
+      if (!current && unwatched.length === 1) {
+        state.pickId = newMovie.id;
       }
 
-
       save();
-
       render();
     }
 
-
-    /* =========================================================
-       RANDOM PICKER
-       ========================================================= */
-
     function pickRandom(pool) {
-
       if (pool.length === 0) {
-
         state.pickId = null;
-
         save();
-
         render();
-
         return;
       }
 
-
       state.spinning = true;
-
       render();
 
-
       let ticks = 0;
-
       const maxTicks = 10;
+      const interval = setInterval(() => {
+        ticks += 1;
+        const flash = pool[Math.floor(Math.random() * pool.length)];
+        state.pickId = flash.id;
+        render();
 
-
-      const interval =
-        setInterval(() => {
-
-          ticks += 1;
-
-
-          const flash =
-            pool[
-              Math.floor(
-                Math.random() *
-                pool.length
-              )
-            ];
-
-
-          state.pickId =
-            flash.id;
-
-
+        if (ticks >= maxTicks) {
+          clearInterval(interval);
+          const finalPick = pool[Math.floor(Math.random() * pool.length)];
+          state.pickId = finalPick.id;
+          state.spinning = false;
+          save();
           render();
-
-
-          if (ticks >= maxTicks) {
-
-            clearInterval(interval);
-
-
-            const finalPick =
-              pool[
-                Math.floor(
-                  Math.random() *
-                  pool.length
-                )
-              ];
-
-
-            state.pickId =
-              finalPick.id;
-
-            state.spinning = false;
-
-
-            save();
-
-            render();
-          }
-
-        }, 70);
+        }
+      }, 70);
     }
 
-
-    /* =========================================================
-       MARK WATCHED
-       ========================================================= */
-
     function markWatched(id) {
-
-      state.movies =
-        state.movies.map(
-          m =>
-            m.id === id
-              ? {
-                  ...m,
-                  watched: true
-                }
-              : m
-        );
-
-
-      const remaining =
-        state.movies.filter(
-          m => !m.watched
-        );
-
-
+      state.movies = state.movies.map(m => m.id === id ? { ...m, watched: true } : m);
+      const remaining = state.movies.filter(m => !m.watched);
       save();
 
-
       if (remaining.length > 0) {
-
         pickRandom(remaining);
-
       } else {
-
         state.pickId = null;
-
         render();
       }
     }
 
-
-    /* =========================================================
-       REMOVE MOVIE
-       ========================================================= */
-
     function removeMovie(id) {
-
-      state.movies =
-        state.movies.filter(
-          m => m.id !== id
-        );
-
-
+      state.movies = state.movies.filter(m => m.id !== id);
       if (state.pickId === id) {
-
-        const remaining =
-          state.movies.filter(
-            m => !m.watched
-          );
-
-
-        state.pickId =
-          remaining.length
-            ? remaining[0].id
-            : null;
+        const remaining = state.movies.filter(m => !m.watched);
+        state.pickId = remaining.length ? remaining[0].id : null;
       }
-
-
       save();
-
       render();
     }
-
-
-    /* =========================================================
-       UNWATCH
-       ========================================================= */
 
     function unwatchMovie(id) {
-
-      state.movies =
-        state.movies.map(
-          m =>
-            m.id === id
-              ? {
-                  ...m,
-                  watched: false
-                }
-              : m
-        );
-
-
-      /*
-        If there isn't currently a movie selected,
-        make the newly restored movie the selection.
-      */
-
-      const current =
-        state.movies.find(
-          m =>
-            m.id === state.pickId &&
-            !m.watched
-        );
-
-
-      if (!current) {
-        state.pickId = id;
-      }
-
-
+      state.movies = state.movies.map(m => m.id === id ? { ...m, watched: false } : m);
       save();
-
       render();
     }
-
-
-    /* =========================================================
-       SWITCH TAB
-       ========================================================= */
 
     function switchTab(tabName) {
-
       state.tab = tabName;
-
       render();
     }
 
-
-    /* =========================================================
-       RENDER
-       ========================================================= */
-
     function render() {
+      const unwatched = state.movies.filter(m => !m.watched);
+      const watched = state.movies.filter(m => m.watched);
+      const current = state.movies.find(m => m.id === state.pickId && !m.watched) || null;
 
-      const unwatched =
-        state.movies.filter(
-          m => !m.watched
-        );
+      document.getElementById("queue-count").textContent = unwatched.length;
+      document.getElementById("seen-count").textContent = watched.length;
+      
+      document.getElementById("tab-queue").className = `tab mp-btn ${state.tab === 'queue' ? 'active' : ''}`;
+      document.getElementById("tab-seen").className = `tab mp-btn ${state.tab === 'seen' ? 'active' : ''}`;
 
-
-      const watched =
-        state.movies.filter(
-          m => m.watched
-        );
-
-
-      const current =
-        state.movies.find(
-          m =>
-            m.id === state.pickId &&
-            !m.watched
-        ) || null;
-
-
-      /* Counts */
-
-      document
-        .getElementById(
-          "queue-count"
-        )
-        .textContent =
-        unwatched.length;
-
-
-      document
-        .getElementById(
-          "seen-count"
-        )
-        .textContent =
-        watched.length;
-
-
-      /* Tabs */
-
-      document
-        .getElementById(
-          "tab-queue"
-        )
-        .className =
-        `tab mp-btn ${
-          state.tab === "queue"
-            ? "active"
-            : ""
-        }`;
-
-
-      document
-        .getElementById(
-          "tab-seen"
-        )
-        .className =
-        `tab mp-btn ${
-          state.tab === "seen"
-            ? "active"
-            : ""
-        }`;
-
-
-      /* =====================================================
-         TICKET
-         ===================================================== */
-
-      const ticketZone =
-        document.getElementById(
-          "ticket-zone"
-        );
-
-
+      const ticketZone = document.getElementById("ticket-zone");
       if (current) {
-
         ticketZone.innerHTML = `
-
           <div class="ticket">
-
             <div class="ticket-body">
-
-              <span class="ticket-eyebrow">
-                TONIGHT'S SHOWING
-              </span>
-
-
-              <h2
-                class="ticket-title ${
-                  state.spinning
-                    ? "spinning"
-                    : ""
-                }"
-              >
-                ${escapeHtml(
-                  current.title
-                )}
-              </h2>
-
-
+              <span class="ticket-eyebrow">TONIGHT'S SHOWING</span>
+              <h2 class="ticket-title ${state.spinning ? 'spinning' : ''}">${escapeHtml(current.title)}</h2>
               <div class="ticket-actions">
-
-                <button
-                  class="primary-btn mp-btn"
-                  onclick="markWatched('${current.id}')"
-                  ${
-                    state.spinning
-                      ? "disabled"
-                      : ""
-                  }
-                >
-
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2.5"
-                  >
-                    <polyline points="20 6 9 17 4 12"/>
-                  </svg>
-
+                <button class="primary-btn mp-btn" onclick="markWatched('${current.id}')" ${state.spinning ? 'disabled' : ''}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
                   Mark watched
-
                 </button>
-
-
-                <button
-                  class="secondary-btn mp-btn"
-                  onclick="pickRandom(state.movies.filter(m => !m.watched))"
-                  ${
-                    state.spinning ||
-                    unwatched.length < 2
-                      ? "disabled"
-                      : ""
-                  }
-                >
-
-                  <svg
-                    width="16"
-                    height="16"
-                    class="${
-                      state.spinning
-                        ? "mp-reel-spin"
-                        : ""
-                    }"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-
-                    <rect
-                      width="18"
-                      height="18"
-                      x="3"
-                      y="3"
-                      rx="2"
-                    />
-
-                    <path d="M16 8h.01"/>
-                    <path d="M8 8h.01"/>
-                    <path d="M12 12h.01"/>
-                    <path d="M16 16h.01"/>
-                    <path d="M8 16h.01"/>
-
-                  </svg>
-
+                <button class="secondary-btn mp-btn" onclick="pickRandom(state.movies.filter(m => !m.watched))" ${state.spinning || unwatched.length < 2 ? 'disabled' : ''}>
+                  <svg width="16" height="16" class="${state.spinning ? 'mp-reel-spin' : ''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><path d="M16 8h.01"/><path d="M8 8h.01"/><path d="M12 12h.01"/><path d="M16 16h.01"/><path d="M8 16h.01"/></svg>
                   Reroll
-
                 </button>
-
               </div>
-
             </div>
-
           </div>
         `;
-
-
-      } else if (
-        unwatched.length === 0 &&
-        state.movies.length > 0
-      ) {
-
+      } else if (unwatched.length === 0 && state.movies.length > 0) {
         ticketZone.innerHTML = `
-
           <div class="empty-ticket">
-
-            <p>
-              You've seen everything on the list.
-            </p>
-
-            <p class="sub">
-              Add a new title below, or move one
-              back to your queue.
-            </p>
-
+            <p>You've seen everything on the list.</p>
+            <p class="sub">Add a new title below, or move one back to your queue.</p>
           </div>
         `;
-
-
       } else {
-
         ticketZone.innerHTML = `
-
           <div class="empty-ticket">
-
-            <p>
-              Your marquee is empty.
-            </p>
-
-            <p class="sub">
-              Add a movie below to get your first pick.
-            </p>
-
+            <p>Your marquee is empty.</p>
+            <p class="sub">Add a movie below to get your first pick.</p>
           </div>
         `;
       }
 
-
-      /*
-        If movies exist but no movie is currently selected,
-        show the Pick a movie button.
-      */
-
-      if (
-        unwatched.length > 0 &&
-        !current
-      ) {
-
+      if (unwatched.length > 0 && !current) {
         ticketZone.innerHTML += `
-
-          <button
-            class="pick-fresh-btn mp-btn"
-            onclick="pickRandom(state.movies.filter(m => !m.watched))"
-          >
-
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-
-              <path
-                d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"
-              />
-
-              <path d="M13 5v2"/>
-              <path d="M13 17v2"/>
-              <path d="M13 11v2"/>
-
-            </svg>
-
+          <button class="pick-fresh-btn mp-btn" onclick="pickRandom(state.movies.filter(m => !m.watched))">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/></svg>
             Pick a movie
-
           </button>
         `;
       }
 
-
-      /* =====================================================
-         MOVIE LIST
-         ===================================================== */
-
-      const listContainer =
-        document.getElementById(
-          "movie-list"
-        );
-
-
+      const listContainer = document.getElementById("movie-list");
       listContainer.innerHTML = "";
 
-
-      /* =====================================================
-         QUEUE TAB
-         ===================================================== */
-
       if (state.tab === "queue") {
-
         if (unwatched.length === 0) {
-
-          listContainer.innerHTML = `
-            <p class="empty-note">
-              Nothing queued up yet.
-            </p>
-          `;
-
+          listContainer.innerHTML = `<p class="empty-note">Nothing queued up yet.</p>`;
         } else {
-
           unwatched.forEach(m => {
-
-            const isHighlighted =
-              m.id === state.pickId;
-
-
+            const isHighlighted = m.id === state.pickId;
             listContainer.innerHTML += `
-
-              <div
-                class="row ${
-                  isHighlighted
-                    ? "highlight"
-                    : ""
-                }"
-              >
-
-                <span class="row-title">
-                  ${escapeHtml(m.title)}
-                </span>
-
-
+              <div class="row ${isHighlighted ? 'highlight' : ''}">
+                <span class="row-title">${escapeHtml(m.title)}</span>
                 <div class="row-actions">
-
-                  <button
-                    class="icon-btn mp-btn"
-                    title="Mark watched"
-                    onclick="markWatched('${m.id}')"
-                  >
-
-                    <svg
-                      width="15"
-                      height="15"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2.5"
-                    >
-                      <polyline points="20 6 9 17 4 12"/>
-                    </svg>
-
+                  <button class="icon-btn mp-btn" title="Mark watched" onclick="markWatched('${m.id}')">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
                   </button>
-
-
-                  <button
-                    class="icon-btn mp-btn"
-                    style="color: #C1443C;"
-                    title="Remove"
-                    onclick="removeMovie('${m.id}')"
-                  >
-
-                    <svg
-                      width="15"
-                      height="15"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                    >
-
-                      <path d="M3 6h18"/>
-
-                      <path
-                        d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"
-                      />
-
-                      <path
-                        d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"
-                      />
-
-                    </svg>
-
+                  <button class="icon-btn mp-btn" style="color: #C1443C;" title="Remove" onclick="removeMovie('${m.id}')">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
                   </button>
-
                 </div>
-
               </div>
             `;
           });
         }
-
-
-      /* =====================================================
-         WATCHED TAB
-         ===================================================== */
-
       } else {
-
         if (watched.length === 0) {
-
-          listContainer.innerHTML = `
-            <p class="empty-note">
-              Nothing watched yet — your list starts here.
-            </p>
-          `;
-
+          listContainer.innerHTML = `<p class="empty-note">Nothing watched yet — your list starts here.</p>`;
         } else {
-
           watched.forEach(m => {
-
             listContainer.innerHTML += `
-
               <div class="row">
-
-                <span class="row-title seen">
-                  ${escapeHtml(m.title)}
-                </span>
-
-
+                <span class="row-title seen">${escapeHtml(m.title)}</span>
                 <div class="row-actions">
-
-                  <button
-                    class="icon-btn mp-btn"
-                    title="Move back to queue"
-                    onclick="unwatchMovie('${m.id}')"
-                  >
-
-                    <svg
-                      width="15"
-                      height="15"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                    >
-
-                      <path
-                        d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"
-                      />
-
-                      <path d="M3 3v5h5"/>
-
-                    </svg>
-
+                  <button class="icon-btn mp-btn" title="Move back to queue" onclick="unwatchMovie('${m.id}')">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
                   </button>
-
-
-                  <button
-                    class="icon-btn mp-btn"
-                    style="color: #C1443C;"
-                    title="Remove"
-                    onclick="removeMovie('${m.id}')"
-                  >
-
-                    <svg
-                      width="15"
-                      height="15"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                    >
-
-                      <path d="M3 6h18"/>
-
-                      <path
-                        d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"
-                      />
-
-                      <path
-                        d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"
-                      />
-
-                    </svg>
-
+                  <button class="icon-btn mp-btn" style="color: #C1443C;" title="Remove" onclick="removeMovie('${m.id}')">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
                   </button>
-
                 </div>
-
               </div>
             `;
           });
@@ -1610,14 +545,13 @@
       }
     }
 
-
-    /* =========================================================
-       START APP
-       ========================================================= */
+    function escapeHtml(str) {
+      return str.replace(/[&<>"']/g, function(m) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
+      });
+    }
 
     init();
-
   </script>
-
 </body>
 </html>
