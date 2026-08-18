@@ -15,7 +15,7 @@
       background: #12172B;
       display: flex;
       justify-content: center;
-      padding: 14px 14px 48px; /* Matched top and side padding */
+      padding: 14px 14px 48px;
       font-family: 'Space Grotesk', sans-serif;
     }
 
@@ -27,7 +27,7 @@
       border: 1px solid #2C3559;
       border-radius: 14px;
       padding: 16px 14px;
-      margin-bottom: 14px; /* Uniform 14px gap */
+      margin-bottom: 14px;
     }
     .bulb-row { display: flex; justify-content: space-between; }
     .bulb {
@@ -65,7 +65,7 @@
     }
 
     /* Ticket Zone */
-    .ticket-zone { margin-bottom: 14px; } /* Uniform 14px gap */
+    .ticket-zone { margin-bottom: 14px; }
     .empty-ticket {
       background: #1B2140;
       border: 1px dashed #3E5C76;
@@ -81,22 +81,15 @@
     .ticket {
       background: #FFFFFF;
       border-radius: 16px;
-      padding: 20px 18px;
+      padding: 18px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.35);
     }
 
-    .ticket-eyebrow {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 11px;
-      letter-spacing: 0.12em;
-      color: #C1443C;
-      font-weight: 500;
-    }
     .ticket-title {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 30px;
-      line-height: 1.1;
-      margin: 6px 0 16px;
+      font-size: 32px;
+      line-height: 1.05;
+      margin: 0 0 16px;
       color: #1B2140;
       letter-spacing: 0.01em;
       word-break: break-word;
@@ -151,7 +144,7 @@
     }
 
     /* Form */
-    .add-form { display: flex; gap: 8px; margin-bottom: 14px; } /* Uniform 14px gap */
+    .add-form { display: flex; gap: 8px; margin-bottom: 14px; }
     .mp-input {
       flex: 1;
       background: #1B2140;
@@ -239,7 +232,7 @@
       justify-content: center;
       align-items: center;
       gap: 12px;
-      margin-top: 14px; /* Uniform gap */
+      margin-top: 14px;
       padding-top: 14px;
       border-top: 1px solid #1F2847;
       font-family: 'IBM Plex Mono', monospace;
@@ -313,7 +306,7 @@
     <!-- List -->
     <div class="mp-list" id="movie-list"></div>
 
-    <!-- Footer Controls (Swapped: Import Left, Export Right) -->
+    <!-- Footer Controls -->
     <div class="data-footer">
       <button class="footer-btn" onclick="document.getElementById('import-file-input').click()">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
@@ -473,7 +466,6 @@
       state.movies = state.movies.map(m => m.id === id ? { ...m, watched: true } : m);
       save();
 
-      // Only randomize if the movie being marked watched IS tonight's showing
       if (wasCurrentShowing) {
         const remaining = state.movies.filter(m => !m.watched);
         if (remaining.length > 0) {
@@ -503,7 +495,6 @@
     function unwatchMovie(id) {
       state.movies = state.movies.map(m => m.id === id ? { ...m, watched: false } : m);
       
-      // If nothing is currently picked for tonight, set this unwatched movie as tonight's pick
       const unwatched = state.movies.filter(m => !m.watched);
       const current = state.movies.find(m => m.id === state.pickId && !m.watched);
       if (!current && unwatched.length === 1) {
@@ -534,7 +525,6 @@
       if (current) {
         ticketZone.innerHTML = `
           <div class="ticket">
-            <span class="ticket-eyebrow">TONIGHT'S SHOWING</span>
             <h2 class="ticket-title ${state.spinning ? 'spinning' : ''}">${escapeHtml(current.title)}</h2>
             <div class="ticket-actions">
               <button class="primary-btn mp-btn" onclick="markWatched('${current.id}')" ${state.spinning ? 'disabled' : ''}>
