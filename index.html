@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movie Picker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #12172B;
+      display: flex;
+      justify-content: center;
+      padding: 28px 14px 48px;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    .wrap { width: 100%; max-width: 420px; }
+
+    /* Marquee */
+    .marquee {
+      background: #1B2140;
+      border: 1px solid #2C3559;
+      border-radius: 14px;
+      padding: 16px 14px;
+      margin-bottom: 18px;
+    }
+    .bulb-row { display: flex; justify-content: space-between; }
+    .bulb {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #E8B94E;
+      box-shadow: 0 0 6px 1px rgba(232,185,78,0.7);
+      display: inline-block;
+      animation: mpBulbGlow 1.6s ease-in-out infinite;
+    }
+    .bulb:nth-child(odd) { animation-delay: 0.4s; }
+    .bulb:nth-child(3n) { animation-delay: 0.8s; }
+
+    @keyframes mpBulbGlow {
+      0%, 100% { opacity: 0.35; }
+      50% { opacity: 1; }
+    }
+
+    .marquee-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 0;
+    }
+    .title {
+      font-family: 'Bebas Neue', sans-serif;
+      letter-spacing: 0.14em;
+      font-size: 30px;
+      color: #F5EDE0;
+      margin: 0;
+    }
+
+    /* Ticket Zone */
+    .ticket-zone { margin-bottom: 18px; }
+    .empty-ticket {
+      background: #1B2140;
+      border: 1px dashed #3E5C76;
+      border-radius: 12px;
+      padding: 22px 18px;
+      text-align: center;
+      color: #D8DEEA;
+    }
+    .empty-ticket p { margin: 0; }
+    .empty-ticket .sub { margin-top: 4px; color: #9AAAC0; font-size: 14px; }
+
+    .ticket {
+      background: #F5EDE0;
+      border-radius: 12px;
+      display: flex;
+      align-items: stretch;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
+    .ticket-perf {
+      width: 14px;
+      background: repeating-linear-gradient(180deg, transparent 0 6px, #12172B 6px 8px);
+      background-color: #F5EDE0;
+      flex-shrink: 0;
+    }
+    .ticket-body { padding: 20px 18px; flex: 1; }
+    .ticket-eyebrow {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      color: #C1443C;
+      font-weight: 500;
+    }
+    .ticket-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 30px;
+      line-height: 1.1;
+      margin: 6px 0 16px;
+      color: #1B2140;
+      letter-spacing: 0.01em;
+      word-break: break-word;
+    }
+    .ticket-title.spinning { opacity: 0.5; }
+
+    .ticket-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .primary-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #1B2140;
+      color: #F5EDE0;
+      border: none;
+      border-radius: 8px;
+      padding: 9px 14px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .secondary-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: transparent;
+      color: #1B2140;
+      border: 1px solid #1B2140;
+      border-radius: 8px;
+      padding: 9px 14px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .pick-fresh-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      margin-top: 12px;
+      background: #E8B94E;
+      color: #1B2140;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    /* Form */
+    .add-form { display: flex; gap: 8px; margin-bottom: 18px; }
+    .mp-input {
+      flex: 1;
+      background: #1B2140;
+      border: 1px solid #2C3559;
+      border-radius: 8px;
+      padding: 11px 12px;
+      color: #F5EDE0;
+      font-size: 14px;
+      font-family: inherit;
+    }
+    .add-btn {
+      background: #E8B94E;
+      border: none;
+      border-radius: 8px;
+      width: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #1B2140;
+      cursor: pointer;
+    }
+
+    /* Tabs */
+    .tab-row { display: flex; gap: 8px; margin-bottom: 10px; }
+    .tab {
+      flex: 1;
+      background: transparent;
+      border: 1px solid #2C3559;
+      border-radius: 8px;
+      padding: 9px 10px;
+      color: #9AAAC0;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'IBM Plex Mono', monospace;
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+    }
+    .tab.active {
+      background: #1B2140;
+      color: #E8B94E;
+      border-color: #E8B94E;
+    }
+
+    /* List */
+    .mp-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 320px;
+      overflow-y: auto;
+      padding-right: 2px;
+    }
+    .mp-list::-webkit-scrollbar { width: 6px; }
+    .mp-list::-webkit-scrollbar-thumb { background: #3E5C76; border-radius: 4px; }
+
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #1B2140;
+      border: 1px solid #2C3559;
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+    .row.highlight { border-color: #E8B94E; }
+    .row-title { color: #F5EDE0; font-size: 14px; word-break: break-word; padding-right: 8px; }
+    .row-title.seen { color: #7C8AA0; text-decoration: line-through; }
+    .row-actions { display: flex; gap: 6px; flex-shrink: 0; }
+    .icon-btn {
+      background: transparent;
+      border: none;
+      color: #9AAAC0;
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+    }
+
+    /* Focus & Animation */
+    .mp-btn:focus-visible, .mp-input:focus-visible, .tab:focus-visible {
+      outline: 2px solid #E8B94E;
+      outline-offset: 2px;
+    }
+    .mp-reel-spin { animation: mpSpin 0.7s linear infinite; }
+    @keyframes mpSpin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .bulb, .mp-reel-spin { animation: none !important; }
+    }
+    .empty-note { color: #7C8AA0; font-size: 14px; text-align: center; padding: 14px 0; }
+  </style>
+</head>
+<body>
+
+  <div class="wrap">
+    <!-- Marquee -->
+    <div class="marquee">
+      <div class="bulb-row" id="top-bulbs"></div>
+      <div class="marquee-inner">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E8B94E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 3v18"/><path d="M3 7.5h4"/><path d="M3 12h18"/><path d="M3 16.5h4"/><path d="M17 3v18"/><path d="M17 7.5h4"/><path d="M17 16.5h4"/></svg>
+        <h1 class="title">NOW PICKING</h1>
+      </div>
+      <div class="bulb-row" id="bottom-bulbs" style="margin-top: 10px;"></div>
+    </div>
+
+    <!-- Ticket Zone -->
+    <div class="ticket-zone" id="ticket-zone"></div>
+
+    <!-- Form -->
+    <form class="add-form" id="add-form">
+      <input class="mp-input" id="movie-input" type="text" placeholder="Add a movie to the queue…" aria-label="Movie title" required />
+      <button class="add-btn mp-btn" type="submit" aria-label="Add movie">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+      </button>
+    </form>
+
+    <!-- Tabs -->
+    <div class="tab-row">
+      <button class="tab mp-btn active" id="tab-queue" onclick="switchTab('queue')">
+        Up next <span id="queue-count">0</span>
+      </button>
+      <button class="tab mp-btn" id="tab-seen" onclick="switchTab('seen')">
+        Already seen <span id="seen-count">0</span>
+      </button>
+    </div>
+
+    <!-- List -->
+    <div class="mp-list" id="movie-list"></div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "movie-picker:list";
+
+    let state = {
+      movies: [],
+      pickId: null,
+      spinning: false,
+      tab: "queue"
+    };
+
+    function uid() {
+      return Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+    }
+
+    function init() {
+      // Build bulbs
+      const topBulbs = document.getElementById("top-bulbs");
+      const bottomBulbs = document.getElementById("bottom-bulbs");
+      for (let i = 0; i < 18; i++) {
+        topBulbs.appendChild(document.createElement("span")).className = "bulb";
+        bottomBulbs.appendChild(document.createElement("span")).className = "bulb";
+      }
+
+      // Load storage
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          state.movies = parsed.movies || [];
+          state.pickId = parsed.pickId || null;
+        }
+      } catch (e) {
+        console.error("Failed to load local storage", e);
+      }
+
+      document.getElementById("add-form").addEventListener("submit", addMovie);
+      render();
+    }
+
+    function save() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          movies: state.movies,
+          pickId: state.pickId
+        }));
+      } catch (e) {
+        console.error("Failed to save state", e);
+      }
+    }
+
+    function addMovie(e) {
+      e.preventDefault();
+      const input = document.getElementById("movie-input");
+      const title = input.value.trim();
+      if (!title) return;
+
+      const newMovie = { id: uid(), title, watched: false };
+      state.movies.push(newMovie);
+      input.value = "";
+
+      const unwatched = state.movies.filter(m => !m.watched);
+      const current = state.movies.find(m => m.id === state.pickId && !m.watched);
+
+      if (!current && unwatched.length === 1) {
+        state.pickId = newMovie.id;
+      }
+
+      save();
+      render();
+    }
+
+    function pickRandom(pool) {
+      if (pool.length === 0) {
+        state.pickId = null;
+        save();
+        render();
+        return;
+      }
+
+      state.spinning = true;
+      render();
+
+      let ticks = 0;
+      const maxTicks = 10;
+      const interval = setInterval(() => {
+        ticks += 1;
+        const flash = pool[Math.floor(Math.random() * pool.length)];
+        state.pickId = flash.id;
+        render();
+
+        if (ticks >= maxTicks) {
+          clearInterval(interval);
+          const finalPick = pool[Math.floor(Math.random() * pool.length)];
+          state.pickId = finalPick.id;
+          state.spinning = false;
+          save();
+          render();
+        }
+      }, 70);
+    }
+
+    function markWatched(id) {
+      state.movies = state.movies.map(m => m.id === id ? { ...m, watched: true } : m);
+      const remaining = state.movies.filter(m => !m.watched);
+      save();
+
+      if (remaining.length > 0) {
+        pickRandom(remaining);
+      } else {
+        state.pickId = null;
+        render();
+      }
+    }
+
+    function removeMovie(id) {
+      state.movies = state.movies.filter(m => m.id !== id);
+      if (state.pickId === id) {
+        const remaining = state.movies.filter(m => !m.watched);
+        state.pickId = remaining.length ? remaining[0].id : null;
+      }
+      save();
+      render();
+    }
+
+    function unwatchMovie(id) {
+      state.movies = state.movies.map(m => m.id === id ? { ...m, watched: false } : m);
+      save();
+      render();
+    }
+
+    function switchTab(tabName) {
+      state.tab = tabName;
+      render();
+    }
+
+    function render() {
+      const unwatched = state.movies.filter(m => !m.watched);
+      const watched = state.movies.filter(m => m.watched);
+      const current = state.movies.find(m => m.id === state.pickId && !m.watched) || null;
+
+      // Update Counts & Tab state
+      document.getElementById("queue-count").textContent = unwatched.length;
+      document.getElementById("seen-count").textContent = watched.length;
+      
+      document.getElementById("tab-queue").className = `tab mp-btn ${state.tab === 'queue' ? 'active' : ''}`;
+      document.getElementById("tab-seen").className = `tab mp-btn ${state.tab === 'seen' ? 'active' : ''}`;
+
+      // Render Ticket Zone
+      const ticketZone = document.getElementById("ticket-zone");
+      if (current) {
+        ticketZone.innerHTML = `
+          <div class="ticket">
+            <div class="ticket-perf"></div>
+            <div class="ticket-body">
+              <span class="ticket-eyebrow">TONIGHT'S SHOWING</span>
+              <h2 class="ticket-title ${state.spinning ? 'spinning' : ''}">${escapeHtml(current.title)}</h2>
+              <div class="ticket-actions">
+                <button class="primary-btn mp-btn" onclick="markWatched('${current.id}')" ${state.spinning ? 'disabled' : ''}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  Mark watched
+                </button>
+                <button class="secondary-btn mp-btn" onclick="pickRandom(state.movies.filter(m => !m.watched))" ${state.spinning || unwatched.length < 2 ? 'disabled' : ''}>
+                  <svg width="16" height="16" class="${state.spinning ? 'mp-reel-spin' : ''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 3v18"/><path d="M3 7.5h4"/><path d="M3 12h18"/><path d="M3 16.5h4"/><path d="M17 3v18"/><path d="M17 7.5h4"/><path d="M17 16.5h4"/></svg>
+                  Reroll
+                </button>
+              </div>
+            </div>
+            <div class="ticket-perf"></div>
+          </div>
+        `;
+      } else if (unwatched.length === 0 && state.movies.length > 0) {
+        ticketZone.innerHTML = `
+          <div class="empty-ticket">
+            <p>You've seen everything on the list.</p>
+            <p class="sub">Add a new title below, or move one back to your queue.</p>
+          </div>
+        `;
+      } else {
+        ticketZone.innerHTML = `
+          <div class="empty-ticket">
+            <p>Your marquee is empty.</p>
+            <p class="sub">Add a movie below to get your first pick.</p>
+          </div>
+        `;
+      }
+
+      if (unwatched.length > 0 && !current) {
+        ticketZone.innerHTML += `
+          <button class="pick-fresh-btn mp-btn" onclick="pickRandom(state.movies.filter(m => !m.watched))">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/></svg>
+            Pick a movie
+          </button>
+        `;
+      }
+
+      // Render List
+      const listContainer = document.getElementById("movie-list");
+      listContainer.innerHTML = "";
+
+      if (state.tab === "queue") {
+        if (unwatched.length === 0) {
+          listContainer.innerHTML = `<p class="empty-note">Nothing queued up yet.</p>`;
+        } else {
+          unwatched.forEach(m => {
+            const isHighlighted = m.id === state.pickId;
+            listContainer.innerHTML += `
+              <div class="row ${isHighlighted ? 'highlight' : ''}">
+                <span class="row-title">${escapeHtml(m.title)}</span>
+                <div class="row-actions">
+                  <button class="icon-btn mp-btn" title="Mark watched" onclick="markWatched('${m.id}')">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  </button>
+                  <button class="icon-btn mp-btn" style="color: #C1443C;" title="Remove" onclick="removeMovie('${m.id}')">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                  </button>
+                </div>
+              </div>
+            `;
+          });
+        }
+      } else {
+        if (watched.length === 0) {
+          listContainer.innerHTML = `<p class="empty-note">Nothing watched yet — your list starts here.</p>`;
+        } else {
+          watched.forEach(m => {
+            listContainer.innerHTML += `
+              <div class="row">
+                <span class="row-title seen">${escapeHtml(m.title)}</span>
+                <div class="row-actions">
+                  <button class="icon-btn mp-btn" title="Move back to queue" onclick="unwatchMovie('${m.id}')">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                  </button>
+                  <button class="icon-btn mp-btn" style="color: #C1443C;" title="Remove" onclick="removeMovie('${m.id}')">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                  </button>
+                </div>
+              </div>
+            `;
+          });
+        }
+      }
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/[&<>"']/g, function(m) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
+      });
+    }
+
+    init();
+  </script>
+</body>
+</html>
